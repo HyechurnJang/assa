@@ -117,25 +117,27 @@ function setHomePanelGrid(data) {
 
 function setVPNPanels(data) {
 	$.each(data, function(index, device) {
-		var card_title = $("#" + device.pool_id + "-card-title")
-		var total = parseInt(card_title.attr("total"));
-		var good = parseInt(card_title.attr("good"));
-		var bad = parseInt(card_title.attr("bad"));
-		total += 1;
-		if ( device.live ) {
-			$("#" + device.pool_id).append(`
+		$.each(device.pool_id, function(index, pool_id) {
+			var card_title = $("#" + pool_id + "-card-title")
+			var total = parseInt(card_title.attr("total"));
+			var good = parseInt(card_title.attr("good"));
+			var bad = parseInt(card_title.attr("bad"));
+			total += 1;
+			if ( device.live ) {
+				$("#" + pool_id).append(`
 <div class="col col-left-align clickable" onclick="showShowRunConsolePanel('${device.id}');"><span class="badge badge-success" onclick="">${device.name}</span></div>
-			`);
-			good += 1;
-		} else {
-			$("#" + device.pool_id).append(`
+				`);
+				good += 1;
+			} else {
+				$("#" + pool_id).append(`
 <div class="col col-left-align clickable" onclick="showShowRunConsolePanel('${device.id}');"><span class="badge badge-danger" onclick="">${device.name}</span></div>
-			`);
-			bad += 1;
-		}
-		card_title.attr("total", total);
-		card_title.attr("good", good);
-		card_title.attr("bad", bad);
+				`);
+				bad += 1;
+			}
+			card_title.attr("total", total);
+			card_title.attr("good", good);
+			card_title.attr("bad", bad);
+		});
 	});
 }
 

@@ -95,7 +95,7 @@ class MonManager(Task):
                 net = ipaddress.ip_network(device['vpn_net'])
                 vpn_devices.append({
                     'id' : device_id,
-                    'pool_id' : '',
+                    'pool_id' : [],
                     'name' : device['name'],
                     'ipmask' : '%s/%s' % (str(net.network_address), str(net.netmask)),
                     'live' : False
@@ -118,7 +118,7 @@ class MonManager(Task):
                     break
             for pool in pools:
                 if device['id'] in pool['devices']:
-                    device['pool_id'] = pool['id']
+                    device['pool_id'].append(pool['id'])
         self.vpn_devices = vpn_devices
         
         kv = re.match('\s*1 minute input rate\s+(?P<pkts>\d+) pkts/sec,\s+(?P<bytes>\d+) bytes/sec', traffic_stats[0])
