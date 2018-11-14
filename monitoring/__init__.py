@@ -47,8 +47,8 @@ class MonManager(Task):
         headers = {'Content-Type': 'text/xml', 'Authorization': 'Basic ' + device['account']['token']}
         url = 'https://%s:%d/admin/config' % (device['ip'], device['port'])
         data = '''<?xml version="1.0" encoding="ISO-8859-1"?><config-data config-action="merge" errors="continue"><cli id="0">show run</cli></config-data>'''
-        resp = requests.post(url, data=data, headers=headers, verify=False, timeout=2)
         try:
+            resp = requests.post(url, data=data, headers=headers, verify=False, timeout=2)
             resp_dict = xmltodict.parse(resp.text)['ErrorList']['config-failure']['error-info']
             return list(filter(None, resp_dict['#text'].split('\n')))
         except Exception as e:
