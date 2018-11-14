@@ -62,8 +62,9 @@ function showHomeHQPanel() {
         contentType: "application/json; charset=utf-8",
         dataType: "json",
         success: function(data) {
-        	var tun_per = ((data.tunnel.total - data.tunnel.live).toFixed(2) * 100.0);
-        	if (tun_per > 0) { tun_per = tun_per / data.tunnel.total; }
+        	var tun_per = ((data.tunnel.total - data.tunnel.live) * 100.0);
+        	if (tun_per > 0) { tun_per = 100 - (tun_per / data.tunnel.total); }
+        	else { tun_per = 100; }
         	$("#hq-tunnel-textfield").html("<small>" + data.tunnel.live + "/" + data.tunnel.total + "=</small> " + tun_per.toFixed(1) + " %");
         	tun_gauge.set(tun_per);
         	$("#hq-cpu-textfield").html(data.cpu + " %");
