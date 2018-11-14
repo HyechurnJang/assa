@@ -1,0 +1,431 @@
+body {
+	overflow-x: hidden;
+}
+
+.black-bold {
+	font-weight: bold;
+	color: black;
+}
+
+.clickable {
+	font-weight: bold;
+	cursor: pointer;
+}
+
+.spacing-top {
+	margin-top: 0.5em;
+}
+
+.non-border {
+	border: 0px;
+}
+
+.non-radius {
+	border-radius: 0;
+}
+
+.radius-top {
+	border-radius: 0.25rem 0.25rem 0rem 0rem;
+}
+
+.radius-bottom {
+	border-radius: 0rem 0rem 0.25rem 0.25rem;
+}
+
+.gbox-top {
+	border: 1px solid #ced4da;
+	border-bottom: 0px;
+	border-radius: 0.25rem 0.25rem 0rem 0rem;
+}
+
+.gbox-top-left {
+	border: 1px solid #ced4da;
+	border-bottom: 0px;
+	border-radius: 0.25rem 0rem 0rem 0rem;
+}
+
+.gbox-top-center {
+	border: 1px solid #ced4da;
+	border-bottom: 0px;
+	border-radius: 0;
+}
+
+.gbox-top-right {
+	border: 1px solid #ced4da;
+	border-bottom: 0px;
+	border-radius: 0.25rem 0rem 0rem 0rem;
+}
+
+.gbox-middle {
+	border: 1px solid #ced4da;
+	border-bottom: 0px;
+	border-radius: 0px;
+}
+
+.gbox-bottom {
+	border: 1px solid #ced4da;
+	border-radius: 0rem 0rem 0.25rem 0.25rem;
+}
+
+.gbox-bottom-left {
+	border: 1px solid #ced4da;
+	border-radius: 0rem 0rem 0rem 0.25rem;
+}
+
+.gbox-bottom-center {
+	border: 1px solid #ced4da;
+	border-radius: 0;
+}
+
+.gbox-bottom-right {
+	border: 1px solid #ced4da;
+	border-radius: 0rem 0rem 0.25rem 0rem;
+}
+
+.gbox-label {
+	width: 8rem;
+}
+
+.col-left-align {
+	padding: 0px 0px 0px 5px;
+	flex-grow: unset;
+}
+
+.badge-delete-btn {
+	border: 1px solid #6c757d;
+	cursor: pointer;
+}
+.badge-delete-btn:hover {
+	border: 1px solid #dc3545;
+	background-color: #fff;
+	color: #dc3545;
+}
+
+.btn-custom {
+	border: 1px solid #ced4da;
+}
+
+
+
+#main-tab>li>a {
+	font-size: 1.5rem;
+	font-weight: bold;
+	color: #6c757d;
+}
+#main-tab>li>a.active {
+	color: #495057;
+}
+#setting-tab>li>a {
+	color: #6c757d;
+}
+#setting-tab>li>a.active {
+	color: #495057;
+}
+#task-tab>li>a {
+	color: #6c757d;
+}
+#task-tab>li>a.active {
+	color: #495057;
+}
+
+
+
+
+
+.mon-vpn-result-panel-wrap {
+	display: none;
+	position: absolute;
+	z-index: 1100;
+	top: 0px;
+	left: 0px;
+	width: 100%;
+	height: calc(100%);
+	border: none;
+	margin: none;
+	padding: none;
+	background-color: none;
+}
+
+.mon-vpn-result-panel {
+	position: relative;
+	margin: auto;
+	top: 20px;
+	width: calc(100% - 40px);
+	height: calc(100% - 40px);
+	border: 1px solid #ced4da;
+	border-radius: 0.25rem;
+	background-color: #fff;
+}
+
+.mon-vpn-card-header {
+	background-color: #28a745;
+	color: #fff;
+}
+
+.mon-vpn-card-header.mon-vpn-alert {
+	background-color: #dc3545;
+	color: #fff;
+}
+
+.mon-vpn-card-header.mon-vpn-empty {
+	background-color: #6c757d;
+	color: #fff;
+}
+
+.mon-vpn-card-alert {
+	border-color: #dc3545;
+}
+
+.mon-vpn-card-empty {
+	border-color: #6c757d;
+}
+
+.mon-vpn-card-good {
+	border-color: #28a745;
+}
+
+#show-run-console-panel-wrap {
+	position: absolute;
+	z-index: 1200;
+	top: 0px;
+	left: 0px;
+	width: 100%;
+	height: calc(100%);
+	border: none;
+	margin: none;
+	padding: none;
+	background-color: none;
+}
+
+#show-run-console-panel-wrap.hide {
+	top: -100%;
+}
+
+#show-run-console-panel {
+	position: relative;
+	margin: auto;
+	top: 40px;
+	left: 0px;
+	width: calc(100% - 100px);
+	height: calc(100% - 80px);
+	border: 1px solid #ced4da;
+	border-radius: 0.25rem;
+	background-color: #fff;
+}
+
+#show-run-console {
+	width: 100%;
+	height: calc(100vh - 10em);
+	border: 1px solid #ced4da;
+	border-radius: 0.25rem;
+	color: lime;
+	background-color: black;
+	overflow-y: auto;
+}
+
+
+.card-title>p {
+	margin: 0px;
+	padding: 0px;
+	font-size: .75em;
+}
+
+.task-item-box {
+	overflow-y: auto;
+	min-height: 2.5rem;
+	padding-top: 1rem;
+	padding-bottom: 1rem;
+	padding-right: 5px;
+	margin: 0;
+	border: 1px solid #ced4da;
+	border-radius: 0.25rem;
+}
+
+#task-progress-panel-wrap {
+	display: none;
+	position: absolute;
+	z-index: 1200;
+	top: 4em;
+	left: 0px;
+	width: 100%;
+	height: calc(100% - 4em);
+	margin: none;
+	padding: none;
+	background-color: rgba(255,255,255,0.75);
+}
+
+#task-progress-panel-wrap.hide {
+	top: -110%;
+}
+
+#task-progress-panel {
+	position: relative;
+	margin: auto;
+	top: 40%;
+	width: 50%;
+	background-color: #fff;
+}
+
+#task-result-console-panel-wrap {
+	position: absolute;
+	z-index: 1100;
+	top: 0px;
+	left: 0px;
+	width: 100%;
+	height: calc(100%);
+	border: none;
+	margin: none;
+	padding: none;
+	background-color: none;
+}
+
+#task-result-console-panel-wrap.hide {
+	top: -100%;
+}
+
+#task-result-console-panel {
+	position: relative;
+	margin: auto;
+	top: 20px;
+	width: calc(100% - 40px);
+	height: calc(100% - 40px);
+	border: 1px solid #ced4da;
+	border-radius: 0.25rem;
+	background-color: #fff;
+}
+
+#task-result-console {
+	width: 100%;
+	height: calc(100vh - 8em);
+	border: 1px solid #ced4da;
+	border-radius: 0.25rem;
+	color: lime;
+	background-color: black;
+	overflow-y: auto;
+}
+
+#execute-panel {
+	position: absolute;
+	z-index: 1000;
+	top: 111px;
+	right: 0px;
+	width: 70%;
+	min-width: 400px;
+	height: calc(100% - 111px);
+	border-top: 1px solid #dee2e6;
+	border-left: 1px solid #dee2e6;
+	background-color: #fff;
+}
+
+#execute-panel.hide {
+	right: -75%;
+}
+
+#task-dev-pool-selector {
+	border-right: 0px;
+	border-radius: 0.25rem 0rem 0rem 0.25rem;
+}
+
+#task-com-flow-selector {
+	border-right: 0px;
+	border-radius: 0.25rem 0rem 0rem 0.25rem;
+}
+
+.var-item {
+	margin-left: 5rem;
+	padding: 2px 0px;
+}
+
+.var-label {
+	height: 1.25rem;
+	padding: 1px 12px;
+}
+
+.var-value {
+	height: 1.25rem;
+	padding: 1px 12px;
+}
+
+#task-history-console-panel-wrap {
+	position: absolute;
+	z-index: 1100;
+	top: 0px;
+	left: 0px;
+	width: 100%;
+	height: calc(100%);
+	border: none;
+	margin: none;
+	padding: none;
+	background-color: none;
+}
+
+#task-history-console-panel-wrap.hide {
+	top: -100%;
+}
+
+#task-history-console-panel {
+	position: relative;
+	margin: auto;
+	top: 20px;
+	width: calc(100% - 40px);
+	height: calc(100% - 40px);
+	border: 1px solid #ced4da;
+	border-radius: 0.25rem;
+	background-color: #fff;
+}
+
+#task-history-console {
+	width: 100%;
+	height: calc(100vh - 8em);
+	border: 1px solid #ced4da;
+	border-radius: 0.25rem;
+	color: lime;
+	background-color: black;
+	overflow-y: auto;
+}
+
+.console-label {
+	width: 100%;
+	margin-top: 1.5em;
+	margin-bottom: 0;
+	border-top: 1px dotted #ced4da;
+	border-bottom: 1px dotted #ced4da;
+	color: #ced4da;
+}
+
+#setting-panel {
+	position: absolute;
+	z-index: 1000;
+	top: 111px;
+	right: 0px;
+	width: 70%;
+	min-width: 400px;
+	height: calc(100% - 111px);
+	border-top: 1px solid #dee2e6;
+	border-left: 1px solid #dee2e6;
+	background-color: #fff;
+}
+
+#setting-panel.hide {
+	right: -75%;
+}
+
+.setting-panel-item {
+	margin-top: 0.5em;
+}
+
+.setting-actions {
+	padding-bottom: 0.5em;
+	border-bottom: 1px solid #dee2e6;
+}
+
+#command-text {
+	min-height: 300px;
+}
+
+#pool-items {
+	min-height: 2.5rem;
+	padding-top: 1rem;
+	padding-bottom: 1rem;
+	padding-right: 5px;
+}

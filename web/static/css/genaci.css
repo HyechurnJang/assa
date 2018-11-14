@@ -1,0 +1,46 @@
+.full-width {
+	width: 100%;
+}
+
+.field-table {
+	text-align: left;
+}
+
+.field-label {
+	width: 30%;
+}
+
+.field-value {
+	width: 70%;
+}
+
+.component-panel {
+	float: left;
+	width: 40%;
+	padding: 1em;
+}
+
+.component-table {
+	text-align: left;
+	width: 100%;
+}
+
+#genaci-submit {
+	width: 6em;
+	height: 32px;
+	margin-left: 1em;
+}
+
+#target-epg-panel {
+	padding-left: 1em;
+	padding-right: 1em;
+}
+
+#target-epg-panel > label {
+	float: left;
+}
+
+#target-epg-list {
+	width: 70%;
+	margin-left: 1em;
+}

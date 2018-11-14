@@ -102,3 +102,13 @@ venv.bak/
 
 # mypy
 .mypy_cache/
+/.pydevproject
+/.project
+/.settings/
+/__pygics__/
+/history/
+/table_accounts.json
+/table_commands.json
+/table_devices.json
+/table_pools.json
+/table_workflow.json

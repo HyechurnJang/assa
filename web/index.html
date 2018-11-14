@@ -1,0 +1,541 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<title>ASSA</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+		
+		<link rel="stylesheet" type="text/css" href="static/css/datatables.min.css"/>
+		<link rel="stylesheet" href="static/css/bootstrap.min.css">
+		<link rel="stylesheet" href="static/css/style.css">
+	</head>
+	
+	<body>
+	
+		<script type="text/javascript" src="static/js/jquery-3.3.1.min.js"></script>
+		<script type="text/javascript" src="static/js/popper.min.js"></script>
+		<script type="text/javascript" src="static/js/datatables.min.js"></script>
+		<script type="text/javascript" src="static/js/bootstrap.min.js"></script>
+		<script type="text/javascript" src="static/js/fontawesome.min.js"></script>
+		<script type="text/javascript" src="static/js/gauge.min.js"></script>
+		<script type="text/javascript" src="static/js/app.js"></script>
+		<script type="text/javascript" src="static/js/app-workflow.js"></script>
+		<script type="text/javascript" src="static/js/app-command.js"></script>
+		<script type="text/javascript" src="static/js/app-pool.js"></script>
+		<script type="text/javascript" src="static/js/app-device.js"></script>
+		<script type="text/javascript" src="static/js/app-account.js"></script>
+		<script type="text/javascript" src="static/js/app-task.js"></script>
+		<script type="text/javascript" src="static/js/app-history.js"></script>
+		<script type="text/javascript" src="static/js/app-mon.js"></script>
+		
+		<div>
+			
+			<ul class="nav nav-tabs spacing-top" id="main-tab" role="tablist">
+				<li class="nav-item" onclick="hideSettingPanel();"><a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Home</a></li>
+				<li class="nav-item" onclick="hideSettingPanel();"><a class="nav-link" id="task-tab" data-toggle="tab" href="#task" role="tab" aria-controls="task" aria-selected="false">Task</a></li>
+				<li class="nav-item" onclick="hideSettingPanel();"><a class="nav-link" id="setting-tab-wrap" data-toggle="tab" href="#setting" role="tab" aria-controls="setting" aria-selected="false">Setting</a></li>
+			</ul>
+			<div class="tab-content" id="main-tab-content">
+				<div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+					<div id="show-run-console-panel-wrap" class="hide">
+						<div id="show-run-console-panel">
+							<div class="btn-group" role="group">
+								<button class="btn btn-lg btn-outline-secondary non-radius non-border" type="button" onclick="hideShowRunConsolePanel();">
+									<i class="fas fa-times"></i>
+								</button>
+							</div>
+							<div class="container-fluid spacing-top">
+								<div id="show-run-console" class="container-fluid"></div>
+							</div>
+						</div>
+					</div>
+					<div class="container-fluid spacing-top">
+						<div class="card" style="border-color:#007bff;">
+							<div class="card-header" style="background-color:#007bff;color:#fff;">HeadQuater</div>
+							<div class="card-body">
+								<div class="row">
+									<div class="col">
+										<div class="card">
+											<div class="card-header"><i class="fas fa-microchip"></i> CPU Usages</div>
+											<div class="card-body" style="height:110px;padding-top:5px;text-align:center;">
+												<h3 id="hq-cpu-textfield" style="margin:0px;"></h3>
+												<canvas id="hq-cpu-usages" width="150" height="80"></canvas>
+											</div>
+										</div>
+									</div>
+									<div class="col">
+										<div class="card">
+											<div class="card-header"><i class="fas fa-memory"></i> Memory Usages</div>
+											<div class="card-body" style="height:110px;padding-top:5px;text-align:center;">
+												<!-- <h3 id="hq-mem-per" class="card-title" style="text-align:center;">0%</h3> -->
+												<h3 id="hq-mem-textfield" style="margin:0px;"></h3>
+												<canvas id="hq-mem-usages" width="150" height="80"></canvas>
+											</div>
+										</div>
+									</div>
+									<div class="col">
+										<div class="card">
+											<div class="card-header"><i class="fas fa-sign-in-alt"></i> Input(1min)</div>
+											<div class="card-body" style="height:110px;">
+												<h3 id="hq-input-pkts" class="card-title" style="text-align:center;">0 pkts</h3>
+												<p id="hq-input-bytes" style="margin:0px;text-align:center;">0 bytes</p>
+											</div>
+										</div>
+									</div>
+									<div class="col">
+										<div class="card">
+											<div class="card-header"><i class="fas fa-sign-out-alt"></i> Output(1min)</div>
+											<div class="card-body" style="height:110px;">
+												<h3 id="hq-output-pkts" class="card-title" style="text-align:center;">0 pkts</h3>
+												<p id="hq-output-bytes" style="margin:0px;text-align:center;">0 bytes</p>
+											</div>
+										</div>
+									</div>
+									<div class="col">
+										<div class="card">
+											<div class="card-header"><i class="fas fa-level-down-alt"></i> Drop(1min)</div>
+											<div class="card-body" style="height:110px;padding-top:25px;">
+												<h1 id="hq-drop-pkts" class="card-title" style="text-align:center;">0 pkts</h1>
+											</div>
+										</div>
+									</div>
+								</div>
+								
+								
+								
+								
+							</div>
+						</div>
+						
+						
+						
+					</div>
+					<div id="vpn-panels"></div>
+					<div class="container-fluid spacing-top">
+						<div id="home-panel-grid" class="row"></div>
+					</div>
+				</div>
+				
+				<div class="tab-pane fade" id="task" role="tabpanel" aria-labelledby="task-tab">
+					
+					<ul class="nav nav-tabs spacing-top" id="task-tab" role="tablist">
+						<li class="nav-item"><a class="nav-link active" id="task-execute-tab" data-toggle="tab" href="#task-execute" role="tab" aria-controls="task-execute" aria-selected="false">Execute</a></li>
+						<li class="nav-item" onclick="setTaskHistorySelector();"><a class="nav-link" id="task-history-tab" data-toggle="tab" href="#task-history" role="tab" aria-controls="task-history" aria-selected="false">History</a></li>
+					</ul>
+					
+					<div id="task-tab-content" class="tab-content spacing-top">
+					
+						<div class="tab-pane fade show active" id="task-execute" role="tabpanel" aria-labelledby="task-execute-tab">
+							<div id="task-progress-panel-wrap">
+								<div id="task-progress-panel">
+									<div class="progress">
+										<div id="task-progress-bar" class="progress-bar progress-bar-striped progress-bar-animated bg-success" role="progressbar" style="width: 0%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+									</div>
+								</div>
+							</div>
+							<div id="task-result-console-panel-wrap" class="hide">
+								<div id="task-result-console-panel">
+									<div class="btn-group" role="group">
+										<button class="btn btn-lg btn-outline-secondary non-radius non-border" type="button" onclick="hideTaskResultConsolePanel();">
+											<i class="fas fa-times"></i>
+										</button>
+									</div>
+									<div class="container-fluid spacing-top">
+										<div id="task-result-console" class="container-fluid"></div>
+									</div>
+								</div>
+							</div>
+							<div id="execute-panel" class="hide">
+								<div class="btn-group" role="group">
+									<button class="btn btn-lg btn-outline-secondary non-radius non-border" type="button" onclick="hideExecutePanel();">
+										<i class="fas fa-times"></i>
+									</button>
+									<button id="execute-button" class="btn btn-lg btn-outline-secondary non-radius non-border" type="button" onclick="requestTask();"><i class="fas fa-cogs"></i> Execute</button>
+								</div>
+								<div class="container-fluid">
+									<h3>Task Execution Order</h3>
+								</div>
+								<div class="container-fluid spacing-top">
+									<ul class="list-group non-border">
+										<li id="task-dev-pool-selector-wrap" class="list-group-item non-border">
+											<div class="input-group">
+												<div class="input-group-prepend">
+													<select id="task-dev-pool-selector" class="custom-select black-bold gbox-label">
+														<option value="device">Device</option>
+														<option value="pool">Pool</option>
+													</select>
+												</div>
+												<select id="task-device-selector" class="custom-select black-bold"></select>
+												<select id="task-pool-selector" class="custom-select black-bold"></select>
+												<div class="input-group-append">
+													<button class="btn btn-outline-secondary gbox-label btn-custom" type="button" onclick="showComFlowSelector();">Next</button>
+												</div>
+											</div>
+										</li>
+										<li id="task-com-flow-selector-wrap" class="list-group-item non-border">
+											<div class="input-group">
+												<div class="input-group-prepend">
+													<select id="task-com-flow-selector" class="custom-select black-bold gbox-label">
+														<option value="command">Command</option>
+														<option value="workflow">WorkFlow</option>
+													</select>
+												</div>
+												<select id="task-command-selector" class="custom-select black-bold"></select>
+												<select id="task-workflow-selector" class="custom-select black-bold"></select>
+												<div class="input-group-append">
+													<button class="btn btn-outline-secondary gbox-label btn-custom" type="button" onclick="showCommandVars();">Next</button>
+												</div>
+											</div>
+										</li>
+										<li id="task-com-vars-wrap" class="list-group-item non-border">
+											<ul id="task-com-vars" class="list-group non-border">
+											</ul>
+										</li>
+									</ul>
+								</div>
+							</div>
+							<div class="container-fluid setting-actions">
+								<div class="btn-group" role="group">
+									<button class="btn btn-sm btn-outline-secondary btn-custom" type="button" onclick="getTaskResult();"><small><i class="fas fa-sync-alt"></i></small> Refresh</button>
+									<button class="btn btn-sm btn-outline-secondary btn-custom" type="button" onclick="showExecutePanel();"><small><i class="fas fa-tasks"></i></small> Order</button>
+								</div>
+							</div>
+							<div class="container-fluid spacing-top">
+								<div id="task-result-box" class="row task-item-box"></div>
+							</div>
+						</div>
+						
+						<div class="tab-pane fade" id="task-history" role="tabpanel" aria-labelledby="task-history-tab">
+							<div id="task-history-console-panel-wrap" class="hide">
+								<div id="task-history-console-panel">
+									<div class="btn-group" role="group">
+										<button class="btn btn-lg btn-outline-secondary non-radius non-border" type="button" onclick="hideTaskHistoryConsolePanel();">
+											<i class="fas fa-times"></i>
+										</button>
+									</div>
+									<div class="container-fluid spacing-top">
+										<div id="task-history-console" class="container-fluid"></div>
+									</div>
+								</div>
+							</div>
+							<div class="container-fluid spacing-top">
+								<div class="input-group">
+									<div class="input-group-prepend">
+										<span class="input-group-text gbox-label">Time Stamp</span>
+									</div>
+									<select id="task-history-selector" class="custom-select black-bold"></select>
+									<div class="input-group-append">
+										<button class="btn btn-outline-secondary gbox-label btn-custom" type="button" onclick="getTaskHistoryDetail();"><i class="fas fa-eye"></i> View</button>
+										<!-- <button class="btn btn-outline-secondary gbox-label btn-custom" type="button"><a href=""><i class="fas fa-file-download"></i> Download</a></button> -->
+										<button class="btn btn-outline-secondary gbox-label btn-custom" type="button" onclick="delTaskHistory();"><i class="fas fa-trash"></i> Delete</button>
+									</div>
+								</div>
+							</div>
+							<div class="container-fluid spacing-top">
+								<div id="task-history-box" class="row task-item-box"></div>
+							</div>
+						</div>
+						
+					</div>
+				</div>
+				
+				<div class="tab-pane fade" id="setting" role="tabpanel" aria-labelledby="setting-tab-wrap">
+					
+					<ul class="nav nav-tabs spacing-top" id="setting-tab" role="tablist">
+						<li class="nav-item" onclick="hideSettingPanel();"><a class="nav-link active" id="workflow-tab" data-toggle="tab" href="#workflow" role="tab" aria-controls="workflow" aria-selected="false">Work Flows</a></li>
+						<li class="nav-item" onclick="hideSettingPanel();"><a class="nav-link" id="command-tab" data-toggle="tab" href="#command" role="tab" aria-controls="command" aria-selected="false">Commands</a></li>
+						<li class="nav-item" onclick="hideSettingPanel();"><a class="nav-link" id="pool-tab" data-toggle="tab" href="#pool" role="tab" aria-controls="pool" aria-selected="false">Device Pools</a></li>
+						<li class="nav-item" onclick="hideSettingPanel();"><a class="nav-link" id="device-tab" data-toggle="tab" href="#device" role="tab" aria-controls="device" aria-selected="false">Devices</a></li>
+						<li class="nav-item" onclick="hideSettingPanel();"><a class="nav-link" id="account-tab" data-toggle="tab" href="#account" role="tab" aria-controls="account" aria-selected="true">Accounts</a></li>
+					</ul>
+					
+					<div id="setting-panel" class="hide">
+						<div class="btn-group" role="group">
+							<button class="btn btn-lg btn-outline-secondary non-radius non-border" type="button" onclick="hideSettingPanel();">
+								<i class="fas fa-times"></i>
+							</button>
+							<div id="setting-panel-save-button-wrap">
+							</div>
+						</div>
+						
+						<!-- ################################################################# -->
+						<!-- WorkFlow                                                          -->
+						<!-- ################################################################# -->
+						<div id="setting-workflow" class="container-fluid setting-panel-item">
+							<input id="workflow-id" type="hidden"/>
+							<h3 id="workflow-title"></h3>
+							<ul class="list-group non-border">
+								<li class="list-group-item non-border">
+									<div class="input-group">
+										<div class="input-group-prepend">
+											<span class="input-group-text gbox-label">Name</span>
+										</div>
+										<input id="workflow-name" type="text" class="form-control black-bold">
+									</div>
+								</li>
+								<li class="list-group-item non-border">
+									<div class="input-group-text gbox-top">Commands</div>
+									<div id="workflow-items"></div>
+									<div class="input-group">
+										<select id="workflow-selector" class="custom-select black-bold gbox-bottom-left">
+										</select>
+										<div class="input-group-append">
+											<button class="btn btn-outline-secondary gbox-bottom-right" type="button" onclick="addWorkFlowCommand();"><small><i class="fas fa-plus"></i></small></button>
+										</div>
+									</div>
+								</li>
+							</ul>
+						</div>
+						
+						<!-- ################################################################# -->
+						<!-- Command                                                           -->
+						<!-- ################################################################# -->
+						<div id="setting-command" class="container-fluid setting-panel-item">
+							<input id="command-id" type="hidden"/>
+							<h3 id="command-title"></h3>
+							<ul class="list-group non-border">
+								<li class="list-group-item non-border">
+									<div class="input-group">
+										<div class="input-group-prepend">
+											<span class="input-group-text gbox-label">Name</span>
+										</div>
+										<input id="command-name" type="text" class="form-control black-bold">
+									</div>
+								</li>
+								<li class="list-group-item non-border">
+									<div class="input-group-text radius-top gbox-top">CLI</div>
+									<div class="input-group">
+										<div class="input-group-prepend">
+											<span class="input-group-text gbox-middle gbox-label">Variables</span>
+										</div>
+										<span id="command-vars" class="form-control gbox-middle"></span>
+									</div>
+									<textarea id="command-text" class="form-control gbox-bottom black-bold"></textarea>
+								</li>
+								<li class="list-group-item non-border">
+									<h5>Variable Definition</h5>
+									<div>{VARIABLE_NAME} <small>: runtime variable input, (A to Z, a to z, 0 to 9 and _)</small></div>
+									<div>#NODE# <small>: runtime device datapath ip</small></div>
+								</li>
+							</ul>
+						</div>
+						
+						<!-- ################################################################# -->
+						<!-- Pool                                                              -->
+						<!-- ################################################################# -->
+						<div id="setting-pool" class="container-fluid setting-panel-item">
+							<input id="pool-id" type="hidden"/>
+							<h3 id="pool-title"></h3>
+							<ul class="list-group non-border">
+								<li class="list-group-item non-border">
+									<div class="input-group">
+										<div class="input-group-prepend">
+											<span class="input-group-text gbox-label">Name</span>
+										</div>
+										<input id="pool-name" type="text" class="form-control black-bold">
+									</div>
+								</li>
+								<li class="list-group-item non-border">
+									<div class="input-group-text gbox-top">Search</div>
+									<div class="input-group">
+										<div class="input-group-prepend">
+											<span class="input-group-text gbox-middle gbox-label">w/Name</span>
+										</div>
+										<input type="text" id="search-device-by-name" class="form-control gbox-middle">
+										<div class="input-group-append">
+											<button class="btn btn-outline-secondary gbox-middle" type="button" onclick="addDeviceToPoolByName();"><small><i class="fas fa-plus"></i></small></button>
+										</div>
+									</div>
+									<div class="input-group">
+										<div class="input-group-prepend">
+											<span class="input-group-text gbox-middle gbox-label">w/IP</span>
+										</div>
+										<input type="text" id="search-device-by-ip" class="form-control gbox-middle">
+										<div class="input-group-append">
+											<button class="btn btn-outline-secondary gbox-middle" type="button" onclick="addDeviceToPoolByIP();"><small><i class="fas fa-plus"></i></small></button>
+										</div>
+									</div>
+									<div class="container-fluid">
+										<div id="pool-items" class="row gbox-bottom"></div>
+									</div>
+								</li>
+							</ul>
+						</div>
+						
+						<!-- ################################################################# -->
+						<!-- Device                                                            -->
+						<!-- ################################################################# -->
+						<div id="setting-device" class="container-fluid setting-panel-item">
+							<input id="device-id" type="hidden"/>
+							<h3 id="device-title"></h3>
+							<ul class="list-group non-border">
+								<li class="list-group-item non-border">
+									<div class="input-group">
+										<div class="input-group-prepend">
+											<span class="input-group-text gbox-label">Name</span>
+										</div>
+										<input id="device-name" type="text" class="form-control black-bold">
+										<div class="input-group-append">
+											<div class="form-check">
+												<span class="input-group-text">
+													<input class="form-check-input" type="checkbox" id="device-headquater">
+													<label class="form-check-label" for="device-headquater">HeadQuater</label>
+												</span>
+											</div>
+										</div>
+									</div>
+								</li>
+								<li class="list-group-item non-border">
+									<div class="input-group-text gbox-top">Account</div>
+									<div class="input-group">
+										<div class="input-group-prepend">
+											<span class="input-group-text gbox-middle gbox-label">Preset</span>
+										</div>
+										<select id="device-account-selector" class="custom-select black-bold gbox-middle"></select>
+									</div>
+									<div class="input-group">
+										<div class="input-group-prepend">
+											<span class="input-group-text gbox-middle gbox-label">Username</span>
+										</div>
+										<input type="text" id="device-username" class="form-control gbox-middle black-bold">
+									</div>
+									<div class="input-group">
+										<div class="input-group-prepend">
+											<span class="input-group-text gbox-bottom-left gbox-label">Password</span>
+										</div>
+										<input type="password" id="device-password" class="form-control gbox-bottom-right black-bold">
+									</div>
+								</li>
+								<li class="list-group-item non-border">
+									<div class="input-group-text gbox-top">Device Descriptions</div>
+									<div class="input-group">
+										<div class="input-group-prepend">
+											<span class="input-group-text gbox-middle gbox-label">IP</span>
+										</div>
+										<input type="text" id="device-ip" class="form-control gbox-middle black-bold">
+									</div>
+									<div class="input-group">
+										<div class="input-group-prepend">
+											<span class="input-group-text gbox-middle gbox-label">Port</span>
+										</div>
+										<input type="text" id="device-port" class="form-control gbox-middle black-bold">
+									</div>
+									<div class="input-group">
+										<div class="input-group-prepend">
+											<span class="input-group-text gbox-middle gbox-label">DataPlane IP</span>
+										</div>
+										<input type="text" id="device-dp-ip" class="form-control gbox-middle black-bold">
+									</div>
+									<div class="input-group">
+										<div class="input-group-prepend">
+											<span class="input-group-text gbox-bottom-left gbox-label">VPN Network</span>
+										</div>
+										<input type="text" id="device-vpn-net" class="form-control gbox-bottom-left black-bold">
+									</div>
+								</li>
+							</ul>
+						</div>
+						
+						<!-- ################################################################# -->
+						<!-- Account                                                           -->
+						<!-- ################################################################# -->
+						<div id="setting-account" class="container-fluid setting-panel-item">
+							<input id="account-id" type="hidden"/>
+							<h3 id="account-title"></h3>
+							<ul class="list-group non-border">
+								<li class="list-group-item non-border">
+									<div class="input-group">
+										<div class="input-group-prepend">
+											<span class="input-group-text gbox-label">Name</span>
+										</div>
+										<input id="account-name" type="text" class="form-control black-bold">
+									</div>
+								</li>
+								<li class="list-group-item non-border">
+									<div class="input-group-text gbox-top">Account Descriptions</div>
+									<div class="input-group">
+										<div class="input-group-prepend">
+											<span class="input-group-text gbox-middle gbox-label">Username</span>
+										</div>
+										<input type="text" id="account-username" class="form-control gbox-middle black-bold">
+									</div>
+									<div class="input-group">
+										<div class="input-group-prepend">
+											<span class="input-group-text gbox-bottom-left gbox-label">Password</span>
+										</div>
+										<input type="password" id="account-password" class="form-control gbox-bottom-left black-bold">
+									</div>
+								</li>
+							</ul>
+						</div>
+						
+					</div>
+					
+					<div id="setting-tab-content" class="tab-content spacing-top">
+					
+						<div class="tab-pane fade show active" id="workflow" role="tabpanel" aria-labelledby="workflow-tab">
+							<div class="container-fluid setting-actions">
+								<div class="btn-group" role="group">
+									<button class="btn btn-sm btn-outline-secondary btn-custom" type="button" onclick="getWorkFlowTable();"><small><i class="fas fa-sync-alt"></i></small> Refresh</button>
+									<button class="btn btn-sm btn-outline-secondary btn-custom" type="button" onclick="showWorkFlowPanel();"><small><i class="fas fa-plus"></i></small> Add</button>
+									<button class="btn btn-sm btn-outline-secondary btn-custom" type="button" onclick="deleteWorkFlows();"><small><i class="fas fa-minus"></i></small> Del</button>
+								</div>
+							</div>
+							<div id="workflow-table-wrap" class="container-fluid spacing-top"></div>
+						</div>
+						
+						
+						<div class="tab-pane fade" id="command" role="tabpanel" aria-labelledby="command-tab">
+							<div class="container-fluid setting-actions">
+								<div class="btn-group" role="group">
+									<button class="btn btn-sm btn-outline-secondary btn-custom" type="button" onclick="getCommandTable();"><small><i class="fas fa-sync-alt"></i></small> Refresh</button>
+									<button class="btn btn-sm btn-outline-secondary btn-custom" type="button" onclick="showCommandPanel();"><small><i class="fas fa-plus"></i></small> Add</button>
+									<button class="btn btn-sm btn-outline-secondary btn-custom" type="button" onclick="deleteCommands();"><small><i class="fas fa-minus"></i></small> Del</button>
+								</div>
+							</div>
+							<div id="command-table-wrap" class="container-fluid spacing-top"></div>
+						</div>
+						
+						<div class="tab-pane fade" id="pool" role="tabpanel" aria-labelledby="pool-tab">
+							<div class="container-fluid setting-actions">
+								<div class="btn-group" role="group">
+									<button class="btn btn-sm btn-outline-secondary btn-custom" type="button" onclick="getPoolTable();"><small><i class="fas fa-sync-alt"></i></small> Refresh</button>
+									<button class="btn btn-sm btn-outline-secondary btn-custom" type="button" onclick="showPoolPanel();"><small><i class="fas fa-plus"></i></small> Add</button>
+									<button class="btn btn-sm btn-outline-secondary btn-custom" type="button" onclick="deletePools();"><small><i class="fas fa-minus"></i></small> Del</button>
+								</div>
+							</div>
+							<div id="pool-table-wrap" class="container-fluid spacing-top"></div>
+						</div>
+						
+						<div class="tab-pane fade" id="device" role="tabpanel" aria-labelledby="device-tab">
+							<div class="container-fluid setting-actions">
+								<div class="btn-group" role="group">
+									<button class="btn btn-sm btn-outline-secondary btn-custom" type="button" onclick="getDeviceTable();"><small><i class="fas fa-sync-alt"></i></small> Refresh</button>
+									<button class="btn btn-sm btn-outline-secondary btn-custom" type="button" onclick="showDevicePanel();"><small><i class="fas fa-plus"></i></small> Add</button>
+									<button class="btn btn-sm btn-outline-secondary btn-custom" type="button" onclick="deleteDevices();"><small><i class="fas fa-minus"></i></small> Del</button>
+								</div>
+							</div>
+							<div id="device-table-wrap" class="container-fluid spacing-top"></div>
+						</div>
+						
+						<div class="tab-pane fade" id="account" role="tabpanel" aria-labelledby="account-tab">
+							<div class="container-fluid setting-actions">
+								<div class="btn-group" role="group">
+									<button class="btn btn-sm btn-outline-secondary btn-custom" type="button" onclick="getAccountTable();"><small><i class="fas fa-sync-alt"></i></small> Refresh</button>
+									<button class="btn btn-sm btn-outline-secondary btn-custom" type="button" onclick="showAccountPanel();"><small><i class="fas fa-plus"></i></small> Add</button>
+									<button class="btn btn-sm btn-outline-secondary btn-custom" type="button" onclick="deleteAccounts();"><small><i class="fas fa-minus"></i></small> Del</button>
+								</div>
+							</div>
+							<div id="account-table-wrap" class="container-fluid spacing-top"></div>
+						</div>
+						
+					</div>
+					
+				</div>
+				
+			</div>
+			
+		</div>
+	
+	</body>
+</html>
