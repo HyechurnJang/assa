@@ -184,7 +184,7 @@ body {
 	border-color: #28a745;
 }
 
-#show-run-console-panel-wrap {
+#device-status-panel-wrap {
 	position: absolute;
 	z-index: 1200;
 	top: 0px;
@@ -197,11 +197,11 @@ body {
 	background-color: none;
 }
 
-#show-run-console-panel-wrap.hide {
+#device-status-panel-wrap.hide {
 	top: -100%;
 }
 
-#show-run-console-panel {
+#device-status-panel {
 	position: relative;
 	margin: auto;
 	top: 40px;
@@ -213,9 +213,9 @@ body {
 	background-color: #fff;
 }
 
-#show-run-console {
+#device-status-console {
 	width: 100%;
-	height: calc(100vh - 10em);
+	height: calc(100vh - 27em);
 	border: 1px solid #ced4da;
 	border-radius: 0.25rem;
 	color: lime;

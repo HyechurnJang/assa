@@ -37,15 +37,77 @@
 			</ul>
 			<div class="tab-content" id="main-tab-content">
 				<div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
-					<div id="show-run-console-panel-wrap" class="hide">
-						<div id="show-run-console-panel">
+					<div id="device-status-panel-wrap" class="hide">
+						<div id="device-status-panel">
 							<div class="btn-group" role="group">
-								<button class="btn btn-lg btn-outline-secondary non-radius non-border" type="button" onclick="hideShowRunConsolePanel();">
+								<button class="btn btn-lg btn-outline-secondary non-radius non-border" type="button" onclick="hideDeviceStatusPanel();">
 									<i class="fas fa-times"></i>
 								</button>
 							</div>
 							<div class="container-fluid spacing-top">
-								<div id="show-run-console" class="container-fluid"></div>
+								
+								
+								
+								<div class="card">
+									<div class="card-header" id="dev-status-name"></div>
+									<div class="card-body">
+										<div class="row">
+											<div class="col">
+												<div class="card">
+													<div class="card-header"><i class="fas fa-microchip"></i> CPU Usages</div>
+													<div class="card-body" style="height:110px;padding-top:5px;text-align:center;">
+														<h3 id="dev-cpu-textfield" style="margin:0px;"></h3>
+														<canvas id="dev-cpu-usages" width="150" height="80"></canvas>
+													</div>
+												</div>
+											</div>
+											<div class="col">
+												<div class="card">
+													<div class="card-header"><i class="fas fa-memory"></i> Memory Usages</div>
+													<div class="card-body" style="height:110px;padding-top:5px;text-align:center;">
+														<h3 id="dev-mem-textfield" style="margin:0px;"></h3>
+														<canvas id="dev-mem-usages" width="150" height="80"></canvas>
+													</div>
+												</div>
+											</div>
+											<div class="col">
+												<div class="card">
+													<div class="card-header"><i class="fas fa-sign-in-alt"></i> Input(1min)</div>
+													<div class="card-body" style="height:110px;">
+														<h3 id="dev-input-pkts" class="card-title" style="text-align:center;">0 pkts</h3>
+														<p id="dev-input-bytes" style="margin:0px;text-align:center;">0 bytes</p>
+													</div>
+												</div>
+											</div>
+											<div class="col">
+												<div class="card">
+													<div class="card-header"><i class="fas fa-sign-out-alt"></i> Output(1min)</div>
+													<div class="card-body" style="height:110px;">
+														<h3 id="dev-output-pkts" class="card-title" style="text-align:center;">0 pkts</h3>
+														<p id="dev-output-bytes" style="margin:0px;text-align:center;">0 bytes</p>
+													</div>
+												</div>
+											</div>
+											<div class="col">
+												<div class="card">
+													<div class="card-header"><i class="fas fa-level-down-alt"></i> Drop(1min)</div>
+													<div class="card-body" style="height:110px;padding-top:25px;">
+														<h1 id="dev-drop-pkts" class="card-title" style="text-align:center;">0 pkts</h1>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+								
+								
+								
+								
+								
+								
+								
+								
+								<div id="device-status-console" class="container-fluid spacing-top"></div>
 							</div>
 						</div>
 					</div>
@@ -100,15 +162,8 @@
 										</div>
 									</div>
 								</div>
-								
-								
-								
-								
 							</div>
 						</div>
-						
-						
-						
 					</div>
 					<div id="vpn-panels"></div>
 					<div class="container-fluid spacing-top">

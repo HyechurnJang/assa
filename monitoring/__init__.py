@@ -27,11 +27,7 @@ class MonManager(Task):
         self.vpn_devices = []
         self.hq_device = {
             'cpu' : 0,
-            'mem' : {
-                'total_bytes' : 0,
-                'used_bytes' : 0,
-                'used_per' : 0
-            }, 
+            'mem' : 0, 
             'traffic' : {
                 'input_pkts' : 0,
                 'input_bytes' : 0,
@@ -42,17 +38,51 @@ class MonManager(Task):
         }
         self.start()
     
-    def getDevShowRun(self, id):
+    def getDevStatus(self, id):
         device = requests.get(self.url_devices + '/%s' % id).json()
         headers = {'Content-Type': 'text/xml', 'Authorization': 'Basic ' + device['account']['token']}
         url = 'https://%s:%d/admin/config' % (device['ip'], device['port'])
-        data = '''<?xml version="1.0" encoding="ISO-8859-1"?><config-data config-action="merge" errors="continue"><cli id="0">show run</cli></config-data>'''
+        data = '''<?xml version="1.0" encoding="ISO-8859-1"?><config-data config-action="merge" errors="continue">
+    <cli id="0">show run</cli>
+    <cli id="1">show interface outside stats | i 1 minute</cli>
+    <cli id="2">show cpu usage | i CPU utilization</cli>
+    <cli id="3">show memory | i Used memory</cli>
+</config-data>'''
+        ret = {
+            'show_run' : None,
+            'cpu' : 0,
+            'mem' : 0, 
+            'traffic' : {
+                'input_pkts' : 0,
+                'input_bytes' : 0,
+                'output_pkts' : 0,
+                'output_bytes' : 0,
+                'drop_pkts' : 0
+            }
+        }
         try:
             resp = requests.post(url, data=data, headers=headers, verify=False, timeout=2)
             resp_dict = xmltodict.parse(resp.text)['ErrorList']['config-failure']['error-info']
-            return list(filter(None, resp_dict['#text'].split('\n')))
         except Exception as e:
-            return [str(e)]
+            ret['show_run'] = [str(e)]
+            return ret
+        ret['show_run'] = list(filter(None, resp_dict[0]['#text'].split('\n')))
+        traffic_stats = list(filter(None, resp_dict[1]['#text'].split('\n')))
+        cpu_usages = list(filter(None, resp_dict[2]['#text'].split('\n')))
+        mem_usages = list(filter(None, resp_dict[3]['#text'].split('\n')))
+        kv = re.match('\s*1 minute input rate\s+(?P<pkts>\d+) pkts/sec,\s+(?P<bytes>\d+) bytes/sec', traffic_stats[0])
+        ret['traffic']['input_pkts'] = kv.group('pkts')
+        ret['traffic']['input_bytes'] = kv.group('bytes')
+        kv = re.match('\s*1 minute output rate\s+(?P<pkts>\d+) pkts/sec,\s+(?P<bytes>\d+) bytes/sec', traffic_stats[1])
+        ret['traffic']['output_pkts'] = kv.group('pkts')
+        ret['traffic']['output_bytes'] = kv.group('bytes')
+        kv = re.match('\s*1 minute drop rate,\s+(?P<pkts>\d+) pkts/sec', traffic_stats[2])
+        ret['traffic']['drop_pkts'] = kv.group('pkts')
+        kv = re.match('CPU utilization for 5 seconds = \d+%; 1 minute: (?P<usage>\d+)%; 5 minutes: \d+%', cpu_usages[0])
+        ret['cpu'] = int(kv.group('usage'))
+        kv = re.match('Used memory:\s+(?P<bytes>\d+) bytes \((?P<per>\d+)%\)', mem_usages[0])
+        ret['mem'] = int(kv.group('per'))
+        return ret
         
     def getResource(self):
         hqdev, devices, pools = Burst(
@@ -72,7 +102,7 @@ class MonManager(Task):
     <cli id="0">show crypto ipsec sa | grep remote ident</cli>
     <cli id="1">show interface outside stats | i 1 minute</cli>
     <cli id="2">show cpu usage | i CPU utilization</cli>
-    <cli id="3">show memory | i bytes</cli>
+    <cli id="3">show memory | i Used memory</cli>
 </config-data>'''
         resp = requests.post(url, data=data, headers=headers, verify=False, timeout=2)
         resp_dict = xmltodict.parse(resp.text)['ErrorList']['config-failure']['error-info']
@@ -136,11 +166,8 @@ class MonManager(Task):
         kv = re.match('CPU utilization for 5 seconds = \d+%; 1 minute: (?P<usage>\d+)%; 5 minutes: \d+%', cpu_usages[0])
         self.hq_device['cpu'] = int(kv.group('usage'))
         
-        kv = re.match('Used memory:\s+(?P<bytes>\d+) bytes \((?P<per>\d+)%\)', mem_usages[1])
-        self.hq_device['mem']['used_bytes'] = kv.group('bytes')
-        self.hq_device['mem']['used_per'] = int(kv.group('per'))
-        kv = re.match('Total memory:\s+(?P<bytes>\d+) bytes \(\d+%\)', mem_usages[2])
-        self.hq_device['mem']['total_bytes'] = kv.group('bytes')
+        kv = re.match('Used memory:\s+(?P<bytes>\d+) bytes \((?P<per>\d+)%\)', mem_usages[0])
+        self.hq_device['mem'] = int(kv.group('per'))
 
 mm = MonManager(ENGINE_HOST, MONITORING_TIMER)
 
@@ -152,7 +179,7 @@ def getVPNStatus(req):
 def getHQDevStatus(req):
     return mm.hq_device
 
-@rest('GET', '/mon/showrun')
-def getDevShowRun(req, id):
-    return mm.getDevShowRun(id)
+@rest('GET', '/mon/device')
+def getDevStatus(req, id):
+    return mm.getDevStatus(id)
     

@@ -2,21 +2,41 @@
 var schedule = null;
 var cpu_gauge = null;
 var mem_gauge = null;
-var pool_grid = null;
+var dev_cpu_gauge = null;
+var dev_mem_gauge = null;
 
-function showShowRunConsolePanel(id) {
-	if ($("#show-run-console-panel-wrap").hasClass("hide")) {
-		$("#show-run-console-panel-wrap").removeClass("hide");
+function showDeviceStatusPanel(id, name) {
+	if ($("#device-status-panel-wrap").hasClass("hide")) {
+		$("#device-status-panel-wrap").removeClass("hide");
 	}
-	var con = $("#show-run-console");
+	var con = $("#device-status-console");
 	con.empty();
+	$("#dev-status-name").html(name);
+	$("#dev-cpu-textfield").empty();
+	dev_cpu_gauge.set(0);
+	$("#dev-mem-textfield").empty();
+	dev_mem_gauge.set(0);
+	$("#dev-input-pkts").empty();
+	$("#dev-input-bytes").empty();
+	$("#dev-output-pkts").empty();
+	$("#dev-output-bytes").empty();
+	$("#dev-drop-pkts").empty();
 	$.ajax({
-        url: "/mon/showrun/" + id,
+        url: "/mon/device/" + id,
         type: "GET",
         contentType: "application/json; charset=utf-8",
         dataType: "json",
         success: function(data) {
-        	con.html(data.join("<br/>"));
+        	con.html(data.show_run.join("<br/>"));
+        	$("#dev-cpu-textfield").html(data.cpu + " %");
+        	dev_cpu_gauge.set(data.cpu);
+        	$("#dev-mem-textfield").html(data.mem + " %");
+        	dev_mem_gauge.set(data.mem);
+        	$("#dev-input-pkts").html(data.traffic.input_pkts + " pkts");
+        	$("#dev-input-bytes").html(data.traffic.input_bytes + " bytes");
+        	$("#dev-output-pkts").html(data.traffic.output_pkts + " pkts");
+        	$("#dev-output-bytes").html(data.traffic.output_bytes + " bytes");
+        	$("#dev-drop-pkts").html(data.traffic.drop_pkts + " pkts");
         },
         error: function(xhr, status, thrown) {
 			console.log("[ERROR] showShowRunPanel()");
@@ -24,9 +44,9 @@ function showShowRunConsolePanel(id) {
     });
 }
 
-function hideShowRunConsolePanel() {
-	if ($("#show-run-console-panel-wrap").hasClass("hide") == false) {
-		$("#show-run-console-panel-wrap").addClass("hide");
+function hideDeviceStatusPanel() {
+	if ($("#device-status-panel-wrap").hasClass("hide") == false) {
+		$("#device-status-panel-wrap").addClass("hide");
 	}
 }
 
@@ -39,8 +59,8 @@ function showHomeHQPanel() {
         success: function(data) {
         	$("#hq-cpu-textfield").html(data.cpu + " %");
         	cpu_gauge.set(data.cpu);
-        	$("#hq-mem-textfield").html(data.mem.used_per + " %");
-        	mem_gauge.set(data.mem.used_per);
+        	$("#hq-mem-textfield").html(data.mem + " %");
+        	mem_gauge.set(data.mem);
         	$("#hq-input-pkts").html(data.traffic.input_pkts + " pkts");
         	$("#hq-input-bytes").html(data.traffic.input_bytes + " bytes");
         	$("#hq-output-pkts").html(data.traffic.output_pkts + " pkts");
@@ -125,12 +145,12 @@ function setVPNPanels(data) {
 			total += 1;
 			if ( device.live ) {
 				$("#" + pool_id).append(`
-<div class="col col-left-align clickable" onclick="showShowRunConsolePanel('${device.id}');"><span class="badge badge-success" onclick="">${device.name}</span></div>
+<div class="col col-left-align clickable" onclick="showDeviceStatusPanel('${device.id}','${device.name}');"><span class="badge badge-success">${device.name}</span></div>
 				`);
 				good += 1;
 			} else {
 				$("#" + pool_id).append(`
-<div class="col col-left-align clickable" onclick="showShowRunConsolePanel('${device.id}');"><span class="badge badge-danger" onclick="">${device.name}</span></div>
+<div class="col col-left-align clickable" onclick="showDeviceStatusPanel('${device.id}','${device.name}');"><span class="badge badge-danger">${device.name}</span></div>
 				`);
 				bad += 1;
 			}
@@ -233,6 +253,50 @@ $(document).ready(function() {
 	mem_gauge.maxValue = 100;
 	mem_gauge.minValue = 0;
 	mem_gauge.animationSpeed = 50;
+	
+	dev_cpu_gauge = new Gauge(document.getElementById("dev-cpu-usages")).setOptions({
+		angle: 0.0,
+		lineWidth: 0.5,
+		radiusScale: 1,
+		pointer: {
+			length: 0.6,
+			strokeWidth: 0.035,
+			color: '#000000'
+		},
+		limitMax: false,
+		limitMin: false,
+		colorStart: '#6FADCF',
+		colorStop: '#8FC0DA',
+		strokeColor: '#E0E0E0',
+		generateGradient: true,
+		highDpiSupport: true,
+		percentColors: [[0.0, "#a9d70b" ], [0.50, "#f9c802"], [1.0, "#ff0000"]],
+	});
+	dev_cpu_gauge.maxValue = 100;
+	dev_cpu_gauge.minValue = 0;
+	dev_cpu_gauge.animationSpeed = 50;
+	
+	dev_mem_gauge = new Gauge(document.getElementById("dev-mem-usages")).setOptions({
+		angle: 0.0,
+		lineWidth: 0.5,
+		radiusScale: 1,
+		pointer: {
+			length: 0.6,
+			strokeWidth: 0.035,
+			color: '#000000'
+		},
+		limitMax: false,
+		limitMin: false,
+		colorStart: '#6FADCF',
+		colorStop: '#8FC0DA',
+		strokeColor: '#E0E0E0',
+		generateGradient: true,
+		highDpiSupport: true,
+		percentColors: [[0.0, "#a9d70b" ], [0.50, "#f9c802"], [1.0, "#ff0000"]],
+	});
+	dev_mem_gauge.maxValue = 100;
+	dev_mem_gauge.minValue = 0;
+	dev_mem_gauge.animationSpeed = 50;
 	
 	scheduleHomeHQPanel();
 });
