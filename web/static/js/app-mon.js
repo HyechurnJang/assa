@@ -1,5 +1,6 @@
 
 var schedule = null;
+var tun_gauge = null;
 var cpu_gauge = null;
 var mem_gauge = null;
 var dev_cpu_gauge = null;
@@ -12,25 +13,29 @@ function showDeviceStatusPanel(id, name) {
 	var con = $("#device-status-console");
 	con.empty();
 	$("#dev-status-name").html(name);
-	$("#dev-cpu-textfield").empty();
+	$("#dev-cpu-textfield").html("-");
+	dev_cpu_gauge.animationSpeed = 1;
 	dev_cpu_gauge.set(0);
-	$("#dev-mem-textfield").empty();
+	$("#dev-mem-textfield").html("-");
+	dev_mem_gauge.animationSpeed = 1;
 	dev_mem_gauge.set(0);
-	$("#dev-input-pkts").empty();
-	$("#dev-input-bytes").empty();
-	$("#dev-output-pkts").empty();
-	$("#dev-output-bytes").empty();
-	$("#dev-drop-pkts").empty();
+	$("#dev-input-pkts").html("-");
+	$("#dev-input-bytes").html("-");
+	$("#dev-output-pkts").html("-");
+	$("#dev-output-bytes").html("-");
+	$("#dev-drop-pkts").html("-");
 	$.ajax({
         url: "/mon/device/" + id,
         type: "GET",
         contentType: "application/json; charset=utf-8",
         dataType: "json",
         success: function(data) {
-        	con.html(data.show_run.join("<br/>"));
+    		con.html(data.show_run.join("<br/>"));
         	$("#dev-cpu-textfield").html(data.cpu + " %");
+        	dev_cpu_gauge.animationSpeed = 80;
         	dev_cpu_gauge.set(data.cpu);
         	$("#dev-mem-textfield").html(data.mem + " %");
+        	dev_mem_gauge.animationSpeed = 80;
         	dev_mem_gauge.set(data.mem);
         	$("#dev-input-pkts").html(data.traffic.input_pkts + " pkts");
         	$("#dev-input-bytes").html(data.traffic.input_bytes + " bytes");
@@ -57,6 +62,10 @@ function showHomeHQPanel() {
         contentType: "application/json; charset=utf-8",
         dataType: "json",
         success: function(data) {
+        	var tun_per = ((data.tunnel.total - data.tunnel.live).toFixed(2) * 100.0);
+        	if (tun_per > 0) { tun_per = tun_per / data.tunnel.total; }
+        	$("#hq-tunnel-textfield").html("<small>" + data.tunnel.live + "/" + data.tunnel.total + "=</small> " + tun_per.toFixed(1) + " %");
+        	tun_gauge.set(tun_per);
         	$("#hq-cpu-textfield").html(data.cpu + " %");
         	cpu_gauge.set(data.cpu);
         	$("#hq-mem-textfield").html(data.mem + " %");
@@ -98,7 +107,7 @@ function setHomePanelGrid(data) {
 	vpn_panels.empty();
 	$.each(data, function(index, pool) {
 		home_grid.append(`
-<div class="col">
+<div class="col-2 spacing-top">
 	<div class="card" onclick="showVPNPanel('${pool.id}');">
 		<div id="${pool.id}-card" class="card-header mon-vpn-card-header">${pool.name}</div>
 		<div class="card-body">
@@ -138,7 +147,7 @@ function setHomePanelGrid(data) {
 function setVPNPanels(data) {
 	$.each(data, function(index, device) {
 		$.each(device.pool_id, function(index, pool_id) {
-			var card_title = $("#" + pool_id + "-card-title")
+			var card_title = $("#" + pool_id + "-card-title");
 			var total = parseInt(card_title.attr("total"));
 			var good = parseInt(card_title.attr("good"));
 			var bad = parseInt(card_title.attr("bad"));
@@ -210,6 +219,28 @@ function scheduleHomeHQPanel() {
 }
 
 $(document).ready(function() {
+	tun_gauge = new Gauge(document.getElementById("hq-tunnel-live")).setOptions({
+		angle: 0.0,
+		lineWidth: 0.5,
+		radiusScale: 1,
+		pointer: {
+			length: 0.6,
+			strokeWidth: 0.035,
+			color: '#000000'
+		},
+		limitMax: false,
+		limitMin: false,
+		colorStart: '#6FADCF',
+		colorStop: '#8FC0DA',
+		strokeColor: '#E0E0E0',
+		generateGradient: true,
+		highDpiSupport: true,
+		percentColors: [[0.0, "#ff0000"], [0.50, "#f9c802"], [1.0, "#a9d70b"]],
+	});
+	tun_gauge.maxValue = 100;
+	tun_gauge.minValue = 0;
+	tun_gauge.animationSpeed = 80;
+	
 	cpu_gauge = new Gauge(document.getElementById("hq-cpu-usages")).setOptions({
 		angle: 0.0,
 		lineWidth: 0.5,
@@ -230,7 +261,7 @@ $(document).ready(function() {
 	});
 	cpu_gauge.maxValue = 100;
 	cpu_gauge.minValue = 0;
-	cpu_gauge.animationSpeed = 50;
+	cpu_gauge.animationSpeed = 80;
 	
 	mem_gauge = new Gauge(document.getElementById("hq-mem-usages")).setOptions({
 		angle: 0.0,
@@ -252,7 +283,7 @@ $(document).ready(function() {
 	});
 	mem_gauge.maxValue = 100;
 	mem_gauge.minValue = 0;
-	mem_gauge.animationSpeed = 50;
+	mem_gauge.animationSpeed = 80;
 	
 	dev_cpu_gauge = new Gauge(document.getElementById("dev-cpu-usages")).setOptions({
 		angle: 0.0,
@@ -274,7 +305,7 @@ $(document).ready(function() {
 	});
 	dev_cpu_gauge.maxValue = 100;
 	dev_cpu_gauge.minValue = 0;
-	dev_cpu_gauge.animationSpeed = 50;
+	dev_cpu_gauge.animationSpeed = 80;
 	
 	dev_mem_gauge = new Gauge(document.getElementById("dev-mem-usages")).setOptions({
 		angle: 0.0,
@@ -296,7 +327,7 @@ $(document).ready(function() {
 	});
 	dev_mem_gauge.maxValue = 100;
 	dev_mem_gauge.minValue = 0;
-	dev_mem_gauge.animationSpeed = 50;
+	dev_mem_gauge.animationSpeed = 80;
 	
 	scheduleHomeHQPanel();
 });

@@ -34,6 +34,10 @@ class MonManager(Task):
                 'output_pkts' : 0,
                 'output_bytes' : 0,
                 'drop_pkts' : 0
+            },
+            'tunnel' : {
+                'live' : 0,
+                'total' : 0
             }
         }
         self.start()
@@ -143,11 +147,13 @@ class MonManager(Task):
         traffic_stats = hq_status['traffic_stats']
         cpu_usages = hq_status['cpu_usages']
         mem_usages = hq_status['mem_usages']
+        live_count = 0
         for device in vpn_devices:
             ipmask = device['ipmask']
             for remote_ident in remote_idents:
                 if re.search(ipmask, remote_ident):
                     device['live'] = True
+                    live_count += 1
                     break
             for pool in pools:
                 if device['id'] in pool['devices']:
@@ -168,6 +174,9 @@ class MonManager(Task):
         
         kv = re.match('Used memory:\s+(?P<bytes>\d+) bytes \((?P<per>\d+)%\)', mem_usages[0])
         self.hq_device['mem'] = int(kv.group('per'))
+        
+        self.hq_device['tunnel']['total'] = len(vpn_devices)
+        self.hq_device['tunnel']['live'] = live_count
 
 mm = MonManager(ENGINE_HOST, MONITORING_TIMER)
 
