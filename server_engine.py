@@ -5,5 +5,4 @@ Created on 2018. 10. 30.
 '''
 
 from pygics import server
-
-server('0.0.0.0', 80, 'engine', 'tasking', 'monitoring')
+server('0.0.0.0', 80, 'engine')

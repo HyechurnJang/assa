@@ -11,13 +11,7 @@ import base64
 import ipaddress
 from pygics import Lock
 
-ACCOUNT_FILE = 'table_accounts.json'
-DEVICE_FILE = 'table_devices.json'
-POOL_FILE = 'table_pools.json'
-COMMAND_FILE = 'table_commands.json'
-WORKFLOW_FILE = 'table_workflow.json'
-
-DEFAULT_PORT = 443
+from assa_config import ACCOUNT_FILE, DEVICE_FILE, POOL_FILE, COMMAND_FILE, WORKFLOW_FILE, DEFAULT_PORT
 
 class ResourceManager(dict):
     

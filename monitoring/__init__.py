@@ -4,6 +4,7 @@ Created on 2018. 10. 29.
 @author: Hyechurn Jang, <hyjang@cisco.com>
 '''
 
+import os
 import re
 import json
 import requests
@@ -12,8 +13,7 @@ import ipaddress
 from pygics import sleep, rest, Burst, Lock, Task, Queue
 from engine.asdm import ASDM
 
-ENGINE_HOST = 'localhost'
-MONITORING_TIMER = 30
+from assa_config import ENGINE_HOST, MONITORING_TIMER
 
 class MonManager(Task):
     

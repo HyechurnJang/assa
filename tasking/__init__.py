@@ -13,8 +13,7 @@ from pygics import rest, Burst, Lock, Task, Queue
 from engine.asdm import ASDM
 from engine.webfile import file
 
-ENGINE_HOST = 'localhost'
-HISTORY_DIR = './history'
+from assa_config import ENGINE_HOST, HISTORY_DIR
 
 class HistoryManager(Task):
     
