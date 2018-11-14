@@ -48,8 +48,11 @@ class MonManager(Task):
         url = 'https://%s:%d/admin/config' % (device['ip'], device['port'])
         data = '''<?xml version="1.0" encoding="ISO-8859-1"?><config-data config-action="merge" errors="continue"><cli id="0">show run</cli></config-data>'''
         resp = requests.post(url, data=data, headers=headers, verify=False, timeout=2)
-        resp_dict = xmltodict.parse(resp.text)['ErrorList']['config-failure']['error-info']
-        return list(filter(None, resp_dict['#text'].split('\n')))
+        try:
+            resp_dict = xmltodict.parse(resp.text)['ErrorList']['config-failure']['error-info']
+            return list(filter(None, resp_dict['#text'].split('\n')))
+        except Exception as e:
+            return [str(e)]
         
     def getResource(self):
         hqdev, devices, pools = Burst(
