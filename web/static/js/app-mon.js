@@ -23,7 +23,6 @@ function showDeviceStatusPanel(id, name) {
 	$("#dev-input-bytes").html("-");
 	$("#dev-output-pkts").html("-");
 	$("#dev-output-bytes").html("-");
-	$("#dev-drop-pkts").html("-");
 	$.ajax({
         url: "/mon/device/" + id,
         type: "GET",
@@ -41,7 +40,6 @@ function showDeviceStatusPanel(id, name) {
         	$("#dev-input-bytes").html(data.traffic.input_bytes + " bytes");
         	$("#dev-output-pkts").html(data.traffic.output_pkts + " pkts");
         	$("#dev-output-bytes").html(data.traffic.output_bytes + " bytes");
-        	$("#dev-drop-pkts").html(data.traffic.drop_pkts + " pkts");
         },
         error: function(xhr, status, thrown) {
 			console.log("[ERROR] showShowRunPanel()");
@@ -62,9 +60,14 @@ function showHomeHQPanel() {
         contentType: "application/json; charset=utf-8",
         dataType: "json",
         success: function(data) {
-        	var tun_per = ((data.tunnel.total - data.tunnel.live) * 100.0);
-        	if (tun_per > 0) { tun_per = 100 - (tun_per / data.tunnel.total); }
-        	else { tun_per = 100; }
+        	var tun_per = 0;
+        	if (data.tunnel.live == 0 ) {
+        		tun_per = 0;
+        	} else if (data.tunnel.total == data.tunnel.live) {
+        		tun_per = 100;
+        	} else {
+        		tun_per = (data.tunnel.live * 100.0) / data.tunnel.total;
+        	}
         	$("#hq-tunnel-textfield").html("<small>" + data.tunnel.live + "/" + data.tunnel.total + "=</small> " + tun_per.toFixed(1) + " %");
         	tun_gauge.set(tun_per);
         	$("#hq-cpu-textfield").html(data.cpu + " %");
@@ -75,7 +78,6 @@ function showHomeHQPanel() {
         	$("#hq-input-bytes").html(data.traffic.input_bytes + " bytes");
         	$("#hq-output-pkts").html(data.traffic.output_pkts + " pkts");
         	$("#hq-output-bytes").html(data.traffic.output_bytes + " bytes");
-        	$("#hq-drop-pkts").html(data.traffic.drop_pkts + " pkts");
         },
         error: function(xhr, status, thrown) {
 			console.log("[ERROR] showHomeHQPanel()");

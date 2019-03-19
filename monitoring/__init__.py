@@ -32,8 +32,7 @@ class MonManager(Task):
                 'input_pkts' : 0,
                 'input_bytes' : 0,
                 'output_pkts' : 0,
-                'output_bytes' : 0,
-                'drop_pkts' : 0
+                'output_bytes' : 0
             },
             'tunnel' : {
                 'live' : 0,
@@ -60,8 +59,7 @@ class MonManager(Task):
                 'input_pkts' : 0,
                 'input_bytes' : 0,
                 'output_pkts' : 0,
-                'output_bytes' : 0,
-                'drop_pkts' : 0
+                'output_bytes' : 0
             }
         }
         try:
@@ -80,8 +78,6 @@ class MonManager(Task):
         kv = re.match('\s*1 minute output rate\s+(?P<pkts>\d+) pkts/sec,\s+(?P<bytes>\d+) bytes/sec', traffic_stats[1])
         ret['traffic']['output_pkts'] = kv.group('pkts')
         ret['traffic']['output_bytes'] = kv.group('bytes')
-        kv = re.match('\s*1 minute drop rate,\s+(?P<pkts>\d+) pkts/sec', traffic_stats[2])
-        ret['traffic']['drop_pkts'] = kv.group('pkts')
         kv = re.match('CPU utilization for 5 seconds = \d+%; 1 minute: (?P<usage>\d+)%; 5 minutes: \d+%', cpu_usages[0])
         ret['cpu'] = int(kv.group('usage'))
         kv = re.match('Used memory:\s+(?P<bytes>\d+) bytes \((?P<per>\d+)%\)', mem_usages[0])
@@ -110,12 +106,20 @@ class MonManager(Task):
 </config-data>'''
         resp = requests.post(url, data=data, headers=headers, verify=False, timeout=2)
         resp_dict = xmltodict.parse(resp.text)['ErrorList']['config-failure']['error-info']
-        
-        remote_idents = list(filter(None, resp_dict[0]['#text'].split('\n')))
-        traffic_stats = list(filter(None, resp_dict[1]['#text'].split('\n')))
-        cpu_usages = list(filter(None, resp_dict[2]['#text'].split('\n')))
-        mem_usages = list(filter(None, resp_dict[3]['#text'].split('\n')))
-        
+        if len(resp_dict) == 4:
+            try: remote_idents = list(filter(None, resp_dict[0]['#text'].split('\n')))
+            except: remote_idents = []
+            try: traffic_stats = list(filter(None, resp_dict[1]['#text'].split('\n')))
+            except: traffic_stats = []
+            cpu_usages = list(filter(None, resp_dict[2]['#text'].split('\n')))
+            mem_usages = list(filter(None, resp_dict[3]['#text'].split('\n')))
+        else:
+            remote_idents = []
+            try: traffic_stats = list(filter(None, resp_dict[0]['#text'].split('\n')))
+            except: traffic_stats = []
+            cpu_usages = list(filter(None, resp_dict[1]['#text'].split('\n')))
+            mem_usages = list(filter(None, resp_dict[2]['#text'].split('\n')))
+            
         return {
             'remote_idents' : remote_idents,
             'traffic_stats' : traffic_stats,
@@ -147,6 +151,7 @@ class MonManager(Task):
         traffic_stats = hq_status['traffic_stats']
         cpu_usages = hq_status['cpu_usages']
         mem_usages = hq_status['mem_usages']
+        
         live_count = 0
         for device in vpn_devices:
             ipmask = device['ipmask']
@@ -161,13 +166,19 @@ class MonManager(Task):
         self.vpn_devices = vpn_devices
         
         kv = re.match('\s*1 minute input rate\s+(?P<pkts>\d+) pkts/sec,\s+(?P<bytes>\d+) bytes/sec', traffic_stats[0])
-        self.hq_device['traffic']['input_pkts'] = kv.group('pkts')
-        self.hq_device['traffic']['input_bytes'] = kv.group('bytes')
+        if kv:
+            self.hq_device['traffic']['input_pkts'] = kv.group('pkts')
+            self.hq_device['traffic']['input_bytes'] = kv.group('bytes')
+        else:
+            self.hq_device['traffic']['input_pkts'] = 0
+            self.hq_device['traffic']['input_bytes'] = 0
         kv = re.match('\s*1 minute output rate\s+(?P<pkts>\d+) pkts/sec,\s+(?P<bytes>\d+) bytes/sec', traffic_stats[1])
-        self.hq_device['traffic']['output_pkts'] = kv.group('pkts')
-        self.hq_device['traffic']['output_bytes'] = kv.group('bytes')
-        kv = re.match('\s*1 minute drop rate,\s+(?P<pkts>\d+) pkts/sec', traffic_stats[2])
-        self.hq_device['traffic']['drop_pkts'] = kv.group('pkts')
+        if kv:
+            self.hq_device['traffic']['output_pkts'] = kv.group('pkts')
+            self.hq_device['traffic']['output_bytes'] = kv.group('bytes')
+        else:
+            self.hq_device['traffic']['output_pkts'] = 0
+            self.hq_device['traffic']['output_bytes'] = 0
         
         kv = re.match('CPU utilization for 5 seconds = \d+%; 1 minute: (?P<usage>\d+)%; 5 minutes: \d+%', cpu_usages[0])
         self.hq_device['cpu'] = int(kv.group('usage'))

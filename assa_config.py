@@ -8,7 +8,7 @@ ENGINE_HOST = 'localhost'
 
 HISTORY_DIR = './history'
 
-MONITORING_TIMER = 30
+MONITORING_TIMER = 10
 
 ACCOUNT_FILE = 'table_accounts.json'
 DEVICE_FILE = 'table_devices.json'

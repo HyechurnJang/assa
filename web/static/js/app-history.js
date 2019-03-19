@@ -38,7 +38,7 @@ function getTaskHistoryDetail() {
 	        		`);
         		} else {
         			box.append(`
-<div class="col col-left-align clickable"><span class="badge badge-success" onclick="showTaskHistoryConsolePanel(history_result[${index}]);">${device.name}</span></div>
+<div class="col col-left-align clickable"><span class="badge badge-primary" onclick="showTaskHistoryConsolePanel(history_result[${index}]);">${device.name}</span></div>
 	        		`);
         		}
         	});
